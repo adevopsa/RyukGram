@@ -76,8 +76,9 @@ jobs:
                   exit 1
                 fi
 
-            - name: Checkout
-              uses: actions/checkout@v4
+                - name: Checkout repository
+                uses: actions/checkout@v6
+
 
             - name: Install Dependencies
               run: brew install dpkg
