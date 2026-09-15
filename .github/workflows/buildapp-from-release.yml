@@ -182,12 +182,13 @@ jobs:
                 ls -la packages
                 ls -la packages/RyukGram.bundle | head -20
 
-            - name: Prepare Instagram IPA
-              env:
-                Instagram_URL: ${{ inputs.decrypted_instagram_url }}
-              run: |
-                set -euo pipefail
-                wget "$Instagram_URL" --no-verbose -O packages/com.burbn.instagram.ipa
+                - name: Prepare Instagram IPA
+                  env:
+                    Instagram_URL: ${{ inputs.decrypted_instagram_url }}
+                  run: |
+                    set -euo pipefail
+                    curl -L -o packages/com.burbn.instagram.ipa "$Instagram_URL" || \
+                      { echo "::error::Failed to download Instagram IPA from $Instagram_URL"; exit 1; }
 
                 # The IPA is user-supplied, so its version can differ from the deb's.
                 PLIST="$(unzip -Z1 packages/com.burbn.instagram.ipa 'Payload/*.app/Info.plist' 2>/dev/null | awk -F/ 'NF==3' | head -1 || true)"
